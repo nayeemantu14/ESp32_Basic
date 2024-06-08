@@ -1,15 +1,16 @@
 #include <string.h>
 #include <Arduino.h>
 #include <WiFi.h>
+#include <DNSServer.h>
+#include <WiFiManager.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-#include "credential.h"
 #include <ESP32Servo.h>
 #include <Servo.h>
 
 
 String clientID = "ESP32- ";
-const char *mqtt_server = "34.151.107.61";
+const char *mqtt_server = "35.197.176.42";
 const char *mqtt_user = "nayeem";
 const char *mqtt_password = "Moon-2008";
 WiFiClient espClient;
@@ -86,19 +87,23 @@ void callback(char *topic, byte *message, unsigned int length)
 void connectAP()
 {
     debugln("Connecting to WiFi");
-    WiFi.begin(ssid, pass);
+    WiFiManager wm;
+    bool res;
+    res = wm.autoConnect("SMTAP", "EnwareIOT1");
     byte cnt = 0;
-
-    while(WiFi.status() != WL_CONNECTED)
+    if(!res)
     {
-        delay(1000);
-        debug(".");
-        cnt++;
-        if(cnt>30)
+        while(WiFi.status() != WL_CONNECTED)
+        
         {
-            ESP.restart();
+            delay(1000);
+            debug(".");
+            cnt++;
+            if(cnt>30)
+            {
+                ESP.restart();
+            }
         }
     }
-    debug("Connected to ");
-    debugln(ssid);
+    debug("Connected to WiFi");
 }
