@@ -16,6 +16,7 @@ const char *mqtt_password = "Moon-2008";
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+
 void reconnect()
 {
     while(!client.connected())
@@ -50,15 +51,18 @@ void callback(char *topic, byte *message, unsigned int length)
     if(String(topic) == "motor")
     {
         servoInit();
-       if(messageTemp == "on")
+        EEPROM.begin(EEPROM_SIZE);
+        bool valveState = EEPROM.readBool(addr);
+       if(messageTemp == "on" && !valveState)
        {
             valveOn();
        }
-       else if(messageTemp == "off")
+       else if(messageTemp == "off" && valveState)
        {
             valveOff();
        }
        delay(500);
+       EEPROM.end();
        servoDeInit();
     }
 
