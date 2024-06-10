@@ -52,7 +52,7 @@ void callback(char *topic, byte *message, unsigned int length)
     {
         servoInit();
         EEPROM.begin(EEPROM_SIZE);
-        bool valveState = EEPROM.readBool(addr);
+        uint8_t valveState = EEPROM.readBool(addr);
        if(messageTemp == "on" && !valveState)
        {
             valveOn();
@@ -61,7 +61,6 @@ void callback(char *topic, byte *message, unsigned int length)
        {
             valveOff();
        }
-       delay(500);
        EEPROM.end();
        servoDeInit();
     }

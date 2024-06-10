@@ -7,7 +7,7 @@
 Servo myservo;
 
 uint8_t addr = 0;
-static bool isValveOn;
+uint8_t isValveOn;
 
 
 void servoInit()
@@ -23,7 +23,8 @@ void servoDeInit()
 void valveOn()
 {
     myservo.writeMicroseconds(1900);
-    isValveOn = true;
+    delay(500);
+    isValveOn = 1;
     EEPROM.writeBool(addr, isValveOn);
     EEPROM.commit();
 }
@@ -31,7 +32,8 @@ void valveOn()
 void valveOff()
 {
     myservo.writeMicroseconds(900);
-    isValveOn = false;
+    delay(500);
+    isValveOn = 0;
     EEPROM.writeBool(addr, isValveOn);
     EEPROM.commit();
 }
