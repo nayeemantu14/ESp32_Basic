@@ -22,13 +22,12 @@ void reconnect()
     while(!client.connected())
     {
         debugln("Attempting MQTT Connection...");
-        clientID += String(random(0xffff), HEX);
+        clientID += String(WiFi.macAddress());
+        debugln(clientID);
         if(client.connect(clientID.c_str(), mqtt_user, mqtt_password))
         {
             debugln("Connected to MQTT");
-            client.subscribe("fromNodeRED");
             client.subscribe("motor");
-            client.subscribe("time");
         }
         else
         {
@@ -50,7 +49,8 @@ void callback(char *topic, byte *message, unsigned int length)
     }
     if(String(topic) == "motor")
     {
-        servoInit();
+        debugln("Motor topic received");
+        //servoInit();
         EEPROM.begin(EEPROM_SIZE);
         uint8_t valveState = EEPROM.readBool(addr);
        if(messageTemp == "on" && !valveState)
@@ -62,28 +62,7 @@ void callback(char *topic, byte *message, unsigned int length)
             valveOff();
        }
        EEPROM.end();
-       servoDeInit();
-    }
-
-    if(String(topic) == "time")
-    {
-        // Stream& input;
-
-        JsonDocument doc;
-
-        DeserializationError error = deserializeJson(doc, messageTemp);
-
-        if (error) {
-        Serial.print("deserializeJson() failed: ");
-        Serial.println(error.c_str());
-        return;
-        }
-
-        float temperature = doc["temperature"];
-        int humidity = doc["humidity"];
-
-        String output = "Temperature: "+String(temperature)+" Humidity: "+ String(humidity);
-        debugln(output);
+       //servoDeInit();
     }
 }
 
@@ -108,5 +87,5 @@ void connectAP()
             }
         }
     }
-    debug("Connected to WiFi");
+    debugln("Connected to WiFi");
 }

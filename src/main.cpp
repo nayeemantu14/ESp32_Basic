@@ -33,10 +33,9 @@ void setup()
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
   dht.begin();
-  debugln("Hello");
 
   // Configure wake up source
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  //esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 }
 
 void loop()
@@ -52,7 +51,7 @@ void loop()
     client.connect("ESP32-");
   }
   // Enter deep sleep mode
-   if(now - tempTime > 5000)
+   if(now - tempTime > 30000)
   {
     temp = dht.readTemperature();
     humidity = dht.readHumidity();
@@ -62,8 +61,9 @@ void loop()
     sendESPdata();
     client.loop();
     tempTime = now;
+    //client.disconnect();
     delay(500);
-    esp_deep_sleep_start();
+    //esp_deep_sleep_start();
   }
 }
 

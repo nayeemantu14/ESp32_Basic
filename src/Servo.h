@@ -22,7 +22,10 @@ void servoDeInit()
 
 void valveOn()
 {
-    myservo.writeMicroseconds(1900);
+    debugln("on message received");
+    //myservo.writeMicroseconds(1900);
+    pinMode(SERVOPIN, OUTPUT);
+    digitalWrite(SERVOPIN, HIGH);
     delay(500);
     isValveOn = 1;
     EEPROM.writeBool(addr, isValveOn);
@@ -31,7 +34,10 @@ void valveOn()
 
 void valveOff()
 {
-    myservo.writeMicroseconds(900);
+    debugln("off message received");
+    //myservo.writeMicroseconds(900);
+    pinMode(SERVOPIN, OUTPUT);
+    digitalWrite(SERVOPIN, LOW);
     delay(500);
     isValveOn = 0;
     EEPROM.writeBool(addr, isValveOn);
