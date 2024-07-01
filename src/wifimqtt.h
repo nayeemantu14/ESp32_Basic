@@ -10,7 +10,7 @@
 
 
 String clientID = "ESP32- ";
-const char *mqtt_server = "35.197.176.42";
+const char *mqtt_server = "34.40.130.157";
 const char *mqtt_user = "nayeem";
 const char *mqtt_password = "Moon-2008";
 WiFiClient espClient;
@@ -22,7 +22,7 @@ void reconnect()
     while(!client.connected())
     {
         debugln("Attempting MQTT Connection...");
-        clientID += String(WiFi.macAddress());
+        clientID = String(WiFi.macAddress());
         debugln(clientID);
         if(client.connect(clientID.c_str(), mqtt_user, mqtt_password))
         {

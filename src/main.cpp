@@ -18,6 +18,8 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // Global Variables
 uint32_t tempTime = millis();
+uint32_t flowTime = millis();
+byte data;
 float temp;
 float humidity;
 
@@ -29,6 +31,8 @@ void sendESPdata();
 void setup()
 {
   Serial.begin(115200);
+  Serial1.begin(9600);
+  adc_attenuation_t::ADC_11db;
   connectAP();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -41,6 +45,16 @@ void setup()
 void loop()
 {
   uint32_t now = millis();
+
+  if(now - flowTime > 1000)
+  {
+    Serial1.write(0x0006);
+    if(Serial1.available())
+    {
+      data = Serial1.read();
+      debugln(data);
+    }
+  }
 
   if (!client.connected())
   {
@@ -90,7 +104,7 @@ void sendESPdata()
   doc["device"] = WiFi.macAddress();
   doc["temperature"] = temp;
   doc["humidity"] = humidity;
-  doc["lux"] = 643;
+  doc["flowrate"] = data;
 
   doc.shrinkToFit(); // optional
   char buff[256];
