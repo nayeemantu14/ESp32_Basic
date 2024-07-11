@@ -10,7 +10,7 @@
 
 
 String clientID = "ESP32- ";
-const char *mqtt_server = "34.40.130.157";
+const char *mqtt_server = "35.189.51.29";
 const char *mqtt_user = "nayeem";
 const char *mqtt_password = "Moon-2008";
 WiFiClient espClient;
@@ -71,6 +71,7 @@ void connectAP()
     debugln("Connecting to WiFi");
     WiFiManager wm;
     bool res;
+    neopixelWrite(RGB_BUILTIN,2,0,0);
     res = wm.autoConnect("SMTAP", "EnwareIOT1");
     byte cnt = 0;
     if(!res)
@@ -88,4 +89,5 @@ void connectAP()
         }
     }
     debugln("Connected to WiFi");
+    neopixelWrite(RGB_BUILTIN,0,2,0);
 }
