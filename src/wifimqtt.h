@@ -5,7 +5,6 @@
 #include <WiFiManager.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-#include <ESP32Servo.h>
 #include <Servo.h>
 
 
@@ -50,7 +49,6 @@ void callback(char *topic, byte *message, unsigned int length)
     if(String(topic) == "motor")
     {
         debugln("Motor topic received");
-        //servoInit();
         EEPROM.begin(EEPROM_SIZE);
         uint8_t valveState = EEPROM.readBool(addr);
        if(messageTemp == "on" && !valveState)
@@ -62,7 +60,6 @@ void callback(char *topic, byte *message, unsigned int length)
             valveOff();
        }
        EEPROM.end();
-       //servoDeInit();
     }
 }
 

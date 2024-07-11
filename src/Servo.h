@@ -1,24 +1,12 @@
-#include <ESP32Servo.h>
 #include <EEPROM.h>
 
 #define SERVOPIN 12
 #define EEPROM_SIZE 1
 
-Servo myservo;
 
 uint8_t addr = 0;
 uint8_t isValveOn;
 
-
-void servoInit()
-{
-    myservo.attach(SERVOPIN, 900, 2100);
-}
-
-void servoDeInit()
-{
-    myservo.detach();
-}
 
 void valveOn()
 {
