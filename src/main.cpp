@@ -5,6 +5,7 @@
 #include "wifimqtt.h"
 #include "OTA.h"
 #include "FlowSensor.h"
+#include "PressureSensor.h"
 
 //defines
 #define uS_TO_S_FACTOR 1000000 /* Conversion factor for micro seconds to seconds */
@@ -19,6 +20,7 @@ uint32_t reportTime = millis(); // Track the last report time
 
 byte data[9];
 static float flowrate;
+static uint16_t pressure = 0;
 static float lastReportedFlowrate = 0.0; // Track the last reported flow rate
 bool isFlowAvailable = false;
 
@@ -38,6 +40,7 @@ void setup()
   Serial.begin(115200);
   Serial1.begin(9600, SERIAL_8E1);
   adc_attenuation_t::ADC_11db;
+  init_pressure();
   connectAP();
   enableOTA();
   client.setServer(mqtt_server, 1883);
@@ -71,6 +74,7 @@ void loop()
   {
     reportTime = now;
     lastReportedFlowrate = flowrate;
+    pressure = readPressure();
     displayFlow();
     sendESPdata();
     client.loop();
@@ -100,6 +104,7 @@ void sendESPdata()
   {
     doc["flowrate"] = "no data";
   }
+  doc["pressure"] = pressure;
   doc.shrinkToFit(); // optional
   char buff[256];
   serializeJson(doc, buff);
