@@ -1,15 +1,26 @@
 #include<Arduino.h>
 
-#define PRESSUREPIN 3
+#define PRESSCH1 5  
+#define PRESSCH2 6
 
-void init_pressure()
+void init_pressure_ch1()
 {
-    pinMode(PRESSUREPIN, INPUT);
+    pinMode(PRESSCH1, INPUT);
 }
 
-uint16_t readPressure()
+void init_pressure_ch2()
 {
-    uint16_t analogPressure = analogRead(PRESSUREPIN);
+    pinMode(PRESSCH2, INPUT);
+}
+
+uint16_t readPressure_ch1()
+{
+    uint16_t analogPressure = analogRead(PRESSCH1);
     return analogPressure;
 }
 
+uint16_t readPressure_ch2()
+{
+    uint16_t analogPressure = analogRead(PRESSCH2);
+    return analogPressure;
+}

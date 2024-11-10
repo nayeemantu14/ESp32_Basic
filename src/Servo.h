@@ -1,6 +1,6 @@
 #include <EEPROM.h>
 
-#define SERVOPIN 8
+#define SERVOPIN 4
 #define EEPROM_SIZE 1
 
 

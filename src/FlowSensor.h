@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 // Function Prototypes
-float bytesToFloat(byte b1, byte b2, byte b3, byte b4);
-bool readFlowSensorData(byte* command, size_t commandSize, float& flowrate, byte* data, size_t dataSize = 8);
+float flowToFloat(byte b1, byte b2, byte b3, byte b4);
+bool readFlowSensorData(byte* command, size_t commandSize, float& flowrate, byte* data, size_t dataSize);
 
-float bytesToFloat(byte b1, byte b2, byte b3, byte b4) {
+float flowToFloat(byte b1, byte b2, byte b3, byte b4) {
     union {
         float f;
         byte b[4];
@@ -24,13 +24,18 @@ bool readFlowSensorData(byte* command, size_t commandSize, float& flowrate, byte
 
     if (Serial1.available() >= dataSize) {
         Serial1.readBytes(data, dataSize); 
-        if (data[0] == 0x01) {
+        if (data[0] != 0x42 && data[1] !=0x4d) {
+            Serial.println(data[0], HEX);
+            Serial.println(data[1], HEX);
             // Extract data and convert to float
-            flowrate = bytesToFloat(data[3], data[4], data[5], data[6]);
-            return true;
-        } else {
             Serial.println("Error: Sensor data not valid");
+            //ESP.restart();
             return false;
+        } else {
+            flowrate = flowToFloat(data[16], data[17], data[18], data[19]);
+            Serial.println(data[0], HEX);
+            Serial.println(data[1], HEX);
+            return true;
         }
     } else {
         return false;
